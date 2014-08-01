@@ -16,21 +16,30 @@ var WatchersTextInput = (function() {
     }
 
     function sync_checkboxes() {
-	var selected_userids = select_box.val();
-	
-	//	selected_userids = select_box.val();
-	//	console.log(select_box.val());
-	//console.log(selected_userids);
-	checkboxes.prop('checked', false);  // clear all boxes first
-	if (selected_userids && selected_userids.length) {
-	    for (var i=0; i < selected_userids.length; i++) {
-		var userid = selected_userids[i];
-		//console.log('selected user is:' + userid);
-		
-		$("#issue_watcher_user_ids_" + userid).find('input').prop('checked', true);
-		    
-	    }
-	}
+    var selected_userids = select_box.val();
+
+    //	selected_userids = select_box.val();
+    //	console.log(select_box.val());
+    //console.log(selected_userids);
+    checkboxes.prop('checked', false);  // clear all boxes first
+    group = new RegExp(",", "i");
+    if (selected_userids && selected_userids.length) {
+        for (var i=0; i < selected_userids.length; i++) {
+            var userid = selected_userids[i];
+            if (userid.match(group)) {
+                group_userids = userid.split(',')
+                    for (var i=0; i < group_userids.length; i++) {
+                        group_userid = group_userids[i];
+                        $("#issue_watcher_user_ids_" + group_userid).find('input').prop('checked', true);
+                    }
+            } else {
+                //console.log('selected user is:' + userid);
+
+                $("#issue_watcher_user_ids_" + userid).find('input').prop('checked', true);
+            }
+
+        }
+    }
 
     }
     
