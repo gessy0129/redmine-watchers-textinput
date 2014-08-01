@@ -1,6 +1,28 @@
+<%
+@groups=Hash.new
+# プロジェクトに所属するグループのみを抽出する
+@project.principals.find(
+                :all,
+                :conditions => [ 'type = ?', 'Group' ]
+                ).each do |group|
+  Group.find(:all, :conditions => {:id => group.id}).each do |item|
+    key=item[:lastname]
+    value=item.users
+    values=Array.new
+    # GroupのIDを入れても意味がないので、ユーザーIDを列挙する
+    value.each do |user|
+      values+=[user[:id]]
+    end
+    @groups[key] = values.join(',')
+  end
+end
+%>
 <select multiple id="watchers_select_box" data-placeholder="Start typing a name" >
   <% @available_watchers.each do |watcher| %>
   <option value="<%= watcher.id %>"> <%= watcher %>  </option>
+  <% end %>
+  <% @groups.each do |value, ids| %>
+  <option value="<%= ids %>">group: <%= value %>  </option>
   <% end %>
 </select>
 
